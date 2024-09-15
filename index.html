@@ -10,6 +10,10 @@
             margin: 0;
         }
 
+        h2 {
+            font-size: 2rem;
+            margin: 12px;
+        }
         .quiz-result{
             background-color: lightyellow;
             margin-bottom: 24px;
@@ -18,24 +22,19 @@
         }
 
         form{
-            padding: 12px;
-            border-radius: 24px;
-            border: 1px solid green;
             display: flex;
             align-items: center;
             justify-content: space-around;
         }
         span{
-            font-size: 64px;
-            margin: 24px;
-            font-weight: bold;
+            font-size: 2rem;
         }
         input{
-            font-size: 64px;
-            margin: 24px;
+            font-size: 2rem;
+            
             font-weight: bold;
-            width: 128px;
-            height: 120px;
+            width: 3rem;
+            height: 3rem;
             border: none;
             outline: none;
             border-radius: 24px;
@@ -60,12 +59,7 @@
         .fail{
             color : #E60026;
         }
-        #right, #wrong{
-            font-size: 48px;
-            padding: 12px;
-            margin:16px; 
         
-        }
 
         #answer{
             background: pink;
@@ -80,12 +74,10 @@
 <body>
     <div class="quiz-result">
         <h2 id="right" class="success">
-            
         </h2>
         <h2 id="wrong" class="fail">
-    
         </h2>
-        <span id="timer"></span>
+        <h2 id="timer"></h2>
     </div>
     
     <form id="calculator" onsubmit="checkAnswer(event)">
@@ -102,6 +94,9 @@
         const stats = { 'right': 0, 'wrong': 0 };
         let startTime = 60;
         let currentQuiz = undefined;
+        const doms = {
+            
+        };
 
         let interval = setInterval(() => {
             if ( startTime === 0 ){
@@ -153,17 +148,19 @@
 
 		function checkAnswer( event ) {
             event.preventDefault();
-            currentQuiz.answer = parseInt(document.getElementById("answer").value);
+            const calculator = document.getElementById("calculator");
+            currentQuiz.answer = parseInt(calculator.value);
 			
 			var correctAnswer = currentQuiz.operator === 0 ? currentQuiz.number1 + currentQuiz.number2 : currentQuiz.number1 - currentQuiz.number2 ;
-			document.getElementById("calculator").classList.remove('fail');
-            document.getElementById("calculator").classList.remove('success');
+			
+            calculator.classList.remove('fail');
+            calculator.classList.remove('success');
             if (currentQuiz.answer === correctAnswer) {
-                document.getElementById("calculator").classList.add('success');
+                calculator.classList.add('success');
                 stats.right++;
 				
 			} else {
-                document.getElementById("calculator").classList.add('fail');
+                calculator.classList.add('fail');
                 stats.wrong++;
 			}
             
