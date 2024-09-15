@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html, body{
+            height: 100%;
+            margin: 0;
+        }
+
+        .quiz-result{
+            background-color: lightyellow;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        form{
+            padding: 12px;
+            border-radius: 24px;
+            border: 1px solid green;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        span{
+            font-size: 64px;
+            margin: 24px;
+            font-weight: bold;
+        }
+        input{
+            font-size: 64px;
+            margin: 24px;
+            font-weight: bold;
+            width: 128px;
+            height: 120px;
+            border: none;
+            outline: none;
+            border-radius: 24px;
+            padding: 0 24px;
+        }
+
+        button{
+            font-size: 64px;
+            margin: 24px;
+            font-weight: bold;
+            width: 256px;
+            height: 120px;
+            border: none;
+            border-radius: 24px;
+            padding: 0 24px;
+        }
+
+        .success {
+            color : #00FF00;
+        }
+
+        .fail{
+            color : #E60026;
+        }
+        #right, #wrong{
+            font-size: 48px;
+            padding: 12px;
+            margin:16px; 
+        
+        }
+
+        #answer{
+            background: pink;
+        }
+
+        #answer:disabled{
+            background: silver;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="quiz-result">
+        <h2 id="right" class="success">
+            
+        </h2>
+        <h2 id="wrong" class="fail">
+    
+        </h2>
+        <span id="timer"></span>
+    </div>
+    
+    <form id="calculator" onsubmit="checkAnswer(event)">
+        <span id="number1">1</span>
+        <span id="operator">+</span>
+        <span id="number2">2</span>
+        <span>=</span>
+        <input type="text" id="answer" autocomplete="off"></input>
+        
+    </form>
+    
+    <script>
+        const quizes = [];
+        const stats = { 'right': 0, 'wrong': 0 };
+        let startTime = 60;
+        let currentQuiz = undefined;
+
+        let interval = setInterval(() => {
+            if ( startTime === 0 ){
+                window.clearInterval(interval);
+                document.getElementById("answer").disabled = true;
+            }
+            
+            document.getElementById('timer').innerHTML = `${ startTime-- }s` 
+        }, 1000);
+        
+		function generateNumbers() {
+           
+			let quiz = getNewQuiz();
+            document.getElementById("number1").innerHTML = quiz.number1;
+            document.getElementById("number2").innerHTML = quiz.number2;
+            document.getElementById("operator").innerHTML = quiz.operator === 0 ? '+' : '-';
+            document.getElementById("right").innerHTML = `Correct : ${stats.right}`;
+            document.getElementById("wrong").innerHTML = `Wrong : ${stats.wrong}`;
+            
+            
+            let answer = document.getElementById("answer");
+			answer.value = quiz.answer;
+            currentQuiz = quiz;
+            
+            answer.focus();
+		}
+
+        function getNewQuiz(){
+            let number1  = Math.floor(Math.random() * 20);
+            let number2  = Math.floor( Math.random() * ( 20 - number1 ) );
+            const operator = Math.floor(Math.random() * 2);
+
+            const quiz = { 
+                "number1": parseInt(number1), 
+                "number2": parseInt(number2),
+                "operator": parseInt(operator),
+                "answer" : "",
+            };
+            if ( quiz.operator === 1 ){
+                if ( quiz.number2 > quiz.number1 ){
+                    const temp = quiz.number1;
+                    quiz.number1 = quiz.number2;
+                    quiz.number2 = temp;
+                }
+            }
+        
+            return quiz;
+        }
+
+		function checkAnswer( event ) {
+            event.preventDefault();
+            currentQuiz.answer = parseInt(document.getElementById("answer").value);
+			
+			var correctAnswer = currentQuiz.operator === 0 ? currentQuiz.number1 + currentQuiz.number2 : currentQuiz.number1 - currentQuiz.number2 ;
+			document.getElementById("calculator").classList.remove('fail');
+            document.getElementById("calculator").classList.remove('success');
+            if (currentQuiz.answer === correctAnswer) {
+                document.getElementById("calculator").classList.add('success');
+                stats.right++;
+				
+			} else {
+                document.getElementById("calculator").classList.add('fail');
+                stats.wrong++;
+			}
+            
+            quizes.push(currentQuiz);
+            generateNumbers();
+		}
+
+		generateNumbers();
+	</script>
+</body>
+</html>
