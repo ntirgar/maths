@@ -117,8 +117,7 @@
             document.getElementById("wrong").innerHTML = `Wrong : ${stats.wrong}`;
             
             
-            let answer = document.getElementById("answer");
-			answer.value = quiz.answer;
+            
             currentQuiz = quiz;
             
             answer.focus();
@@ -148,14 +147,12 @@
 
 		function checkAnswer( event ) {
             event.preventDefault();
-            const calculator = document.getElementById("calculator");
-            currentQuiz.answer = parseInt(calculator.value);
-			
+            currentQuiz.answer = parseInt(document.getElementById("answer").value);
 			var correctAnswer = currentQuiz.operator === 0 ? currentQuiz.number1 + currentQuiz.number2 : currentQuiz.number1 - currentQuiz.number2 ;
 			
             calculator.classList.remove('fail');
             calculator.classList.remove('success');
-            if (currentQuiz.answer === correctAnswer) {
+            if ( currentQuiz.answer === correctAnswer) {
                 calculator.classList.add('success');
                 stats.right++;
 				
